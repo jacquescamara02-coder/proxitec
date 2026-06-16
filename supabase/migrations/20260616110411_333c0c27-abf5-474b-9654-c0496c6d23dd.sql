@@ -1,0 +1,2 @@
+ALTER TABLE public.invoices ADD CONSTRAINT invoices_vendeur_id_fkey FOREIGN KEY (vendeur_id) REFERENCES public.profiles(id) ON DELETE SET NULL;
+ALTER TABLE public.prints_log ADD CONSTRAINT prints_log_vendeur_id_fkey FOREIGN KEY (vendeur_id) REFERENCES public.profiles(id) ON DELETE SET NULL;

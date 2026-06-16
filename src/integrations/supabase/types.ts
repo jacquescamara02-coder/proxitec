@@ -168,7 +168,15 @@ export type Database = {
           updated_at?: string
           vendeur_id?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "invoices_vendeur_id_fkey"
+            columns: ["vendeur_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       prints_log: {
         Row: {
@@ -204,7 +212,15 @@ export type Database = {
           unit_price?: number
           vendeur_id?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "prints_log_vendeur_id_fkey"
+            columns: ["vendeur_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       products: {
         Row: {
