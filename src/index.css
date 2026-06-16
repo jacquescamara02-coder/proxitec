@@ -1,0 +1,179 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&family=Open+Sans:wght@300;400;600&display=swap');
+
+@layer base {
+  :root {
+    --background: 220 20% 97%;
+    --foreground: 220 30% 10%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 220 30% 10%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 30% 10%;
+
+    /* Proxitec logo red - bright vivid red */
+    --primary: 4 85% 45%;
+    --primary-foreground: 0 0% 100%;
+
+    /* Darker logo red */
+    --accent-blue: 4 85% 35%;
+    --accent-blue-foreground: 0 0% 100%;
+
+    /* Logo gold/yellow accent */
+    --gold: 44 95% 50%;
+    --gold-foreground: 220 30% 10%;
+
+    --secondary: 4 15% 94%;
+    --secondary-foreground: 4 85% 45%;
+
+    --muted: 4 8% 92%;
+    --muted-foreground: 4 5% 45%;
+
+    --accent: 4 20% 92%;
+    --accent-foreground: 4 85% 45%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 4 10% 85%;
+    --input: 4 10% 85%;
+    --ring: 4 85% 45%;
+
+    --radius: 0.5rem;
+
+    /* Gradients */
+    --gradient-hero: linear-gradient(135deg, hsl(4 85% 14%) 0%, hsl(4 85% 35%) 50%, hsl(4 85% 22%) 100%);
+    --gradient-primary: linear-gradient(135deg, hsl(4 85% 45%), hsl(4 85% 28%));
+    --gradient-gold: linear-gradient(135deg, hsl(44 95% 42%), hsl(44 95% 55%));
+    --gradient-card: linear-gradient(135deg, hsl(0 0% 100%), hsl(4 8% 97%));
+
+    /* Shadows */
+    --shadow-card: 0 4px 24px -4px hsl(4 85% 45% / 0.12);
+    --shadow-hover: 0 8px 40px -8px hsl(4 85% 45% / 0.25);
+    --shadow-primary: 0 8px 32px -8px hsl(4 85% 45% / 0.35);
+
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Open Sans', sans-serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Montserrat', sans-serif;
+  }
+}
+
+@layer utilities {
+  .gradient-hero {
+    background: var(--gradient-hero);
+  }
+  .gradient-primary {
+    background: var(--gradient-primary);
+  }
+  .gradient-gold {
+    background: var(--gradient-gold);
+  }
+  .gradient-card {
+    background: var(--gradient-card);
+  }
+  .shadow-card {
+    box-shadow: var(--shadow-card);
+  }
+  .shadow-hover {
+    box-shadow: var(--shadow-hover);
+  }
+  .shadow-primary-glow {
+    box-shadow: var(--shadow-primary);
+  }
+  .text-gradient-primary {
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .text-gradient-gold {
+    background: var(--gradient-gold);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .accent-blue {
+    color: hsl(var(--accent-blue));
+  }
+  .bg-accent-blue {
+    background-color: hsl(var(--accent-blue));
+  }
+  .gold {
+    color: hsl(var(--gold));
+  }
+  .bg-gold {
+    background-color: hsl(var(--gold));
+  }
+  .bg-primary-deep {
+    background-color: hsl(4 85% 28%);
+  }
+  .bg-primary-darker {
+    background-color: hsl(4 85% 14%);
+  }
+
+  /* Testimonials scrolling animation */
+  @keyframes scroll-left {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+  .animate-scroll-left {
+    animation: scroll-left 30s linear infinite;
+  }
+  .animate-scroll-left:hover {
+    animation-play-state: paused;
+  }
+
+  /* Hero floating particles */
+  @keyframes float-particle {
+    0%, 100% { transform: translateY(0px) translateX(0px) scale(1); opacity: 0.6; }
+    33% { transform: translateY(-20px) translateX(10px) scale(1.1); opacity: 0.8; }
+    66% { transform: translateY(-10px) translateX(-8px) scale(0.9); opacity: 0.5; }
+  }
+  .animate-float-particle {
+    animation: float-particle ease-in-out infinite;
+  }
+
+  @keyframes fade-in-up {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .animate-fade-in-up {
+    animation: fade-in-up 0.7s ease-out forwards;
+    opacity: 0;
+  }
+  .animate-fade-in {
+    animation: fade-in-up 0.5s ease-out forwards;
+    opacity: 0;
+  }
+  @keyframes pulse-glow {
+    0%, 100% { box-shadow: 0 0 0 0 hsl(4 85% 45% / 0); }
+    50% { box-shadow: 0 0 20px 6px hsl(4 85% 45% / 0.25); }
+  }
+  .animate-pulse-glow {
+    animation: pulse-glow 2.5s ease-in-out infinite;
+  }
+}
