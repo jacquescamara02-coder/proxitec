@@ -148,9 +148,18 @@ export const InvoicePrint = ({ invoice, onClose }: { invoice: any; onClose: () =
           </div>
 
           {/* SIGNATURE */}
-          <div className="mt-12">
-            <div className="font-bold">Ing. Patrick Ngomezo'o Nsoh</div>
-            <div>Tél. 077265831 / 066376972</div>
+          <div className="mt-12 flex items-end justify-between">
+            <div>
+              <img
+                src={signatureAsset.url}
+                alt="Signature"
+                className="w-56 h-auto object-contain -mb-2"
+                crossOrigin="anonymous"
+              />
+              <div className="font-bold">Ing. Patrick Ngomezo'o Nsoh</div>
+              <div className="text-[11px]">Tél. 077265831 / 066376972</div>
+            </div>
+            <div className="text-[10px] italic text-gray-600">Cachet et signature</div>
           </div>
 
           {/* FOOTER */}
