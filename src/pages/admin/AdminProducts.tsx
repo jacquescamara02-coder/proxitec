@@ -32,7 +32,7 @@ export default function AdminProducts() {
   const load = async () => {
     const { data, error } = await supabase.from("products").select("*").order("created_at", { ascending: false });
     if (error) toast.error(error.message);
-    else setItems((data || []) as Product[]);
+    else setItems(((data || []) as unknown) as Product[]);
   };
 
   useEffect(() => { load(); }, []);
@@ -71,8 +71,8 @@ export default function AdminProducts() {
     if (!form.name.trim()) { toast.error("Nom requis"); return; }
     const payload = { ...form, name: form.name.trim(), price: Number(form.price), stock_quantity: Number(form.stock_quantity) };
     const { error } = editing
-      ? await supabase.from("products").update(payload).eq("id", editing.id)
-      : await supabase.from("products").insert(payload);
+      ? await supabase.from("products").update(payload as any).eq("id", editing.id)
+      : await supabase.from("products").insert(payload as any);
     if (error) toast.error(error.message);
     else { toast.success(editing ? "Produit modifié" : "Produit ajouté"); setOpen(false); load(); }
   };

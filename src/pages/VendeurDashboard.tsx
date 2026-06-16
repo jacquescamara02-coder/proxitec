@@ -74,7 +74,7 @@ export default function VendeurDashboard() {
       reference: l.reference || null, product_image: l.product_image || null,
       quantity: l.quantity, unit_price: l.unit_price, subtotal: l.quantity * l.unit_price,
     }));
-    const { data: insertedItems, error: itErr } = await supabase.from("invoice_items").insert(itemsPayload).select();
+    const { data: insertedItems, error: itErr } = await supabase.from("invoice_items").insert(itemsPayload as any).select();
     setSubmitting(false);
     if (itErr) { toast.error(itErr.message); return; }
     toast.success(`Facture ${inv.invoice_number} créée`);
