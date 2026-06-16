@@ -172,6 +172,84 @@ export default function AdminDashboard() {
           </Card>
         ))}
       </div>
+
+      {/* Factures récentes */}
+      <Card className="mt-8 overflow-hidden">
+        <div className="p-4 border-b flex items-center justify-between">
+          <h2 className="font-bold flex items-center gap-2"><Receipt className="w-4 h-4 text-primary" />Dernières factures</h2>
+          <Link to="/admin/factures" className="text-xs text-primary hover:underline">Voir tout →</Link>
+        </div>
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead className="bg-muted/40 text-xs uppercase text-muted-foreground">
+              <tr><th className="text-left p-3">N°</th><th className="text-left p-3">Date</th><th className="text-left p-3">Client</th><th className="text-left p-3">Vendeur</th><th className="text-right p-3">Total</th></tr>
+            </thead>
+            <tbody>
+              {recentInvoices.length === 0 && <tr><td colSpan={5} className="p-6 text-center text-muted-foreground">Aucune facture</td></tr>}
+              {recentInvoices.map((inv: any) => (
+                <tr key={inv.id} className="border-t hover:bg-muted/30">
+                  <td className="p-3 font-mono">{inv.invoice_number}</td>
+                  <td className="p-3">{formatDateTime(inv.created_at)}</td>
+                  <td className="p-3">{inv.client_name}</td>
+                  <td className="p-3 text-muted-foreground">{inv.profiles?.full_name || inv.profiles?.email || "—"}</td>
+                  <td className="p-3 text-right font-bold">{formatXAF(Number(inv.total))}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </Card>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+        {/* Impressions récentes */}
+        <Card className="overflow-hidden">
+          <div className="p-4 border-b flex items-center justify-between">
+            <h2 className="font-bold flex items-center gap-2"><Printer className="w-4 h-4 text-amber-600" />Dernières impressions</h2>
+            <Link to="/admin/impressions" className="text-xs text-primary hover:underline">Voir tout →</Link>
+          </div>
+          <table className="w-full text-sm">
+            <thead className="bg-muted/40 text-xs uppercase text-muted-foreground">
+              <tr><th className="text-left p-3">Date</th><th className="text-left p-3">Type</th><th className="text-left p-3">Vendeur</th><th className="text-right p-3">Qté</th><th className="text-right p-3">Total</th></tr>
+            </thead>
+            <tbody>
+              {recentPrints.length === 0 && <tr><td colSpan={5} className="p-6 text-center text-muted-foreground">Aucune impression</td></tr>}
+              {recentPrints.map((p: any) => (
+                <tr key={p.id} className="border-t hover:bg-muted/30">
+                  <td className="p-3">{formatDateTime(p.created_at)}</td>
+                  <td className="p-3 capitalize">{p.type}</td>
+                  <td className="p-3 text-muted-foreground">{p.profiles?.full_name || p.profiles?.email || "—"}</td>
+                  <td className="p-3 text-right">{p.quantity}</td>
+                  <td className="p-3 text-right font-bold">{formatXAF(Number(p.total))}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </Card>
+
+        {/* Rapport vendeurs du mois */}
+        <Card className="overflow-hidden">
+          <div className="p-4 border-b flex items-center justify-between">
+            <h2 className="font-bold flex items-center gap-2"><Users className="w-4 h-4 text-indigo-600" />Rapport du mois — vendeurs</h2>
+            <Link to="/admin/rapports" className="text-xs text-primary hover:underline">Détails →</Link>
+          </div>
+          <table className="w-full text-sm">
+            <thead className="bg-muted/40 text-xs uppercase text-muted-foreground">
+              <tr><th className="text-left p-3">Vendeur</th><th className="text-right p-3">Factures</th><th className="text-right p-3">Impressions</th><th className="text-right p-3">Total</th></tr>
+            </thead>
+            <tbody>
+              {vendorReport.length === 0 && <tr><td colSpan={4} className="p-6 text-center text-muted-foreground">Aucune activité ce mois</td></tr>}
+              {vendorReport.map((v: any, idx: number) => (
+                <tr key={idx} className="border-t hover:bg-muted/30">
+                  <td className="p-3 font-medium">{v.name}</td>
+                  <td className="p-3 text-right">{formatXAF(v.invoices)}</td>
+                  <td className="p-3 text-right">{formatXAF(v.prints)}</td>
+                  <td className="p-3 text-right font-bold text-primary">{formatXAF(v.invoices + v.prints)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </Card>
+      </div>
     </div>
   );
 }
