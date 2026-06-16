@@ -60,7 +60,7 @@ export const InvoicePrint = ({ invoice, onClose }: { invoice: any; onClose: () =
           <div className="flex items-stretch gap-4 mb-2">
             {/* Left : logo + tags */}
             <div className="w-1/3 flex flex-col">
-              <img src="/proxitec-logo.jpg" alt="PROXITEC" className="w-44 mb-2" />
+              <img src={LOGO_BASE64} alt="PROXITEC" className="w-44 mb-2 object-contain" />
               <div className="text-[10px] leading-tight">
                 <div>| INFORMATIQUE | VIDEOSURVEILLANCE</div>
                 <div>| TELEMATIQUE&nbsp;&nbsp;&nbsp;| GESTION DES TEMPS</div>
