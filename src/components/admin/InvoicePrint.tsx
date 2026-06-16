@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Printer } from "lucide-react";
 import { formatXAF, formatDate } from "@/lib/format";
 import logoAsset from "@/assets/proxitec-logo.jpeg.asset.json";
+import signatureAsset from "@/assets/signature.png.asset.json";
 
 // ---------- Convert numbers to French words (XAF) ----------
 const UNITS = ["zéro","un","deux","trois","quatre","cinq","six","sept","huit","neuf","dix","onze","douze","treize","quatorze","quinze","seize","dix-sept","dix-huit","dix-neuf"];
@@ -148,9 +149,18 @@ export const InvoicePrint = ({ invoice, onClose }: { invoice: any; onClose: () =
           </div>
 
           {/* SIGNATURE */}
-          <div className="mt-12">
-            <div className="font-bold">Ing. Patrick Ngomezo'o Nsoh</div>
-            <div>Tél. 077265831 / 066376972</div>
+          <div className="mt-12 flex items-end justify-between">
+            <div>
+              <img
+                src={signatureAsset.url}
+                alt="Signature"
+                className="w-56 h-auto object-contain -mb-2"
+                crossOrigin="anonymous"
+              />
+              <div className="font-bold">Ing. Patrick Ngomezo'o Nsoh</div>
+              <div className="text-[11px]">Tél. 077265831 / 066376972</div>
+            </div>
+            <div className="text-[10px] italic text-gray-600">Cachet et signature</div>
           </div>
 
           {/* FOOTER */}
