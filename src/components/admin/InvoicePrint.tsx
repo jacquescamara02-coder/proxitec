@@ -2,6 +2,7 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Printer } from "lucide-react";
 import { formatXAF, formatDate } from "@/lib/format";
+import { LOGO_BASE64 } from "@/assets/logo-base64";
 
 // ---------- Convert numbers to French words (XAF) ----------
 const UNITS = ["zéro","un","deux","trois","quatre","cinq","six","sept","huit","neuf","dix","onze","douze","treize","quatorze","quinze","seize","dix-sept","dix-huit","dix-neuf"];
