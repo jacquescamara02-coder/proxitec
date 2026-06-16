@@ -13,7 +13,7 @@ import { toast } from "sonner";
 import { formatXAF, formatDateTime } from "@/lib/format";
 import { InvoicePrint } from "@/components/admin/InvoicePrint";
 
-interface LineItem { product_id: string | null; product_name: string; quantity: number; unit_price: number; }
+interface LineItem { product_id: string | null; product_name: string; reference: string; product_image: string | null; quantity: number; unit_price: number; }
 
 export default function VendeurDashboard() {
   const { user, signOut } = useAuth();
@@ -23,7 +23,7 @@ export default function VendeurDashboard() {
   const [products, setProducts] = useState<any[]>([]);
   const [clientName, setClientName] = useState("");
   const [clientPhone, setClientPhone] = useState("");
-  const [lines, setLines] = useState<LineItem[]>([{ product_id: null, product_name: "", quantity: 1, unit_price: 0 }]);
+  const [lines, setLines] = useState<LineItem[]>([{ product_id: null, product_name: "", reference: "", product_image: null, quantity: 1, unit_price: 0 }]);
   const [savedInvoice, setSavedInvoice] = useState<any>(null);
   const [submitting, setSubmitting] = useState(false);
 
@@ -33,7 +33,7 @@ export default function VendeurDashboard() {
   const [viewInv, setViewInv] = useState<any>(null);
 
   useEffect(() => {
-    supabase.from("products").select("id,name,price,stock_quantity").order("name").then(({ data }) => setProducts(data || []));
+    supabase.from("products").select("id,name,reference,price,stock_quantity,image_url").order("name").then(({ data }) => setProducts(data || []));
     loadToday();
     loadMyInvoices();
   }, []);
@@ -49,12 +49,12 @@ export default function VendeurDashboard() {
     setMyInvoices(data || []);
   };
 
-  const addLine = () => setLines([...lines, { product_id: null, product_name: "", quantity: 1, unit_price: 0 }]);
+  const addLine = () => setLines([...lines, { product_id: null, product_name: "", reference: "", product_image: null, quantity: 1, unit_price: 0 }]);
   const removeLine = (i: number) => setLines(lines.filter((_, idx) => idx !== i));
   const updateLine = (i: number, patch: Partial<LineItem>) => setLines(lines.map((l, idx) => idx === i ? { ...l, ...patch } : l));
   const pickProduct = (i: number, pid: string) => {
     const p = products.find(x => x.id === pid);
-    if (p) updateLine(i, { product_id: p.id, product_name: p.name, unit_price: Number(p.price) });
+    if (p) updateLine(i, { product_id: p.id, product_name: p.name, reference: p.reference || "", product_image: p.image_url || null, unit_price: Number(p.price) });
   };
 
   const total = lines.reduce((s, l) => s + l.quantity * l.unit_price, 0);
@@ -71,6 +71,7 @@ export default function VendeurDashboard() {
     if (error || !inv) { setSubmitting(false); toast.error(error?.message || "Erreur"); return; }
     const itemsPayload = valid.map(l => ({
       invoice_id: inv.id, product_id: l.product_id, product_name: l.product_name,
+      reference: l.reference || null, product_image: l.product_image || null,
       quantity: l.quantity, unit_price: l.unit_price, subtotal: l.quantity * l.unit_price,
     }));
     const { data: insertedItems, error: itErr } = await supabase.from("invoice_items").insert(itemsPayload).select();
@@ -79,7 +80,7 @@ export default function VendeurDashboard() {
     toast.success(`Facture ${inv.invoice_number} créée`);
     setSavedInvoice({ ...inv, items: insertedItems });
     setClientName(""); setClientPhone("");
-    setLines([{ product_id: null, product_name: "", quantity: 1, unit_price: 0 }]);
+    setLines([{ product_id: null, product_name: "", reference: "", product_image: null, quantity: 1, unit_price: 0 }]);
     loadMyInvoices();
   };
 

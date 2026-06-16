@@ -14,11 +14,11 @@ import { toast } from "sonner";
 import { formatXAF } from "@/lib/format";
 
 interface Product {
-  id: string; name: string; description: string | null; category: string | null;
+  id: string; name: string; reference: string | null; description: string | null; category: string | null;
   price: number; stock_quantity: number; image_url: string | null; is_visible: boolean;
 }
 
-const empty = { name: "", description: "", category: "", price: 0, stock_quantity: 0, image_url: "", is_visible: true };
+const empty = { name: "", reference: "", description: "", category: "", price: 0, stock_quantity: 0, image_url: "", is_visible: true };
 
 export default function AdminProducts() {
   const [items, setItems] = useState<Product[]>([]);
@@ -41,7 +41,7 @@ export default function AdminProducts() {
   const openEdit = (p: Product) => {
     setEditing(p);
     setForm({
-      name: p.name, description: p.description || "", category: p.category || "",
+      name: p.name, reference: p.reference || "", description: p.description || "", category: p.category || "",
       price: Number(p.price), stock_quantity: p.stock_quantity, image_url: p.image_url || "", is_visible: p.is_visible,
     });
     setOpen(true);
@@ -106,6 +106,7 @@ export default function AdminProducts() {
             </DialogHeader>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 py-4">
               <div className="md:col-span-2"><Label>Nom *</Label><Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} /></div>
+              <div><Label>Référence</Label><Input value={form.reference} onChange={(e) => setForm({ ...form, reference: e.target.value })} placeholder="Ex: PRX-001" /></div>
               <div><Label>Catégorie</Label><Input value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} placeholder="Vidéosurveillance..." /></div>
               <div><Label>Prix (FCFA)</Label><Input type="number" value={form.price} onChange={(e) => setForm({ ...form, price: Number(e.target.value) })} /></div>
               <div><Label>Stock</Label><Input type="number" value={form.stock_quantity} onChange={(e) => setForm({ ...form, stock_quantity: Number(e.target.value) })} /></div>
@@ -160,11 +161,11 @@ export default function AdminProducts() {
       <Card>
         <Table>
           <TableHeader><TableRow>
-            <TableHead>Image</TableHead><TableHead>Nom</TableHead><TableHead>Catégorie</TableHead><TableHead>Prix</TableHead>
+            <TableHead>Image</TableHead><TableHead>Référence</TableHead><TableHead>Nom</TableHead><TableHead>Catégorie</TableHead><TableHead>Prix</TableHead>
             <TableHead>Stock</TableHead><TableHead>Site</TableHead><TableHead className="text-right">Actions</TableHead>
           </TableRow></TableHeader>
           <TableBody>
-            {filtered.length === 0 && <TableRow><TableCell colSpan={7} className="text-center text-muted-foreground py-8">Aucun produit</TableCell></TableRow>}
+            {filtered.length === 0 && <TableRow><TableCell colSpan={8} className="text-center text-muted-foreground py-8">Aucun produit</TableCell></TableRow>}
             {filtered.map((p) => (
               <TableRow key={p.id} className="animate-fade-in">
                 <TableCell>
@@ -174,6 +175,7 @@ export default function AdminProducts() {
                     <div className="w-10 h-10 rounded bg-muted flex items-center justify-center"><ImageIcon className="w-4 h-4 text-muted-foreground" /></div>
                   )}
                 </TableCell>
+                <TableCell className="font-mono text-xs">{p.reference || "—"}</TableCell>
                 <TableCell className="font-medium">{p.name}</TableCell>
                 <TableCell>{p.category || "—"}</TableCell>
                 <TableCell>{formatXAF(Number(p.price))}</TableCell>
