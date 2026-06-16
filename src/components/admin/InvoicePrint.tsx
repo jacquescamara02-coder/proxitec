@@ -41,7 +41,9 @@ function numberToFrench(num: number): string {
 
 export const InvoicePrint = ({ invoice, onClose }: { invoice: any; onClose: () => void }) => {
   const total = Number(invoice.total || 0);
-  const items = invoice.items || [];
+  const items = (invoice.items || []).filter(
+    (it: any) => (it.product_name && String(it.product_name).trim()) && Number(it.quantity) > 0
+  );
   const subtotal = items.reduce((s: number, it: any) => s + Number(it.subtotal || 0), 0);
   const totalInWords = numberToFrench(Math.round(total)) + " francs CFA";
   const invoiceNo = invoice.invoice_number;
