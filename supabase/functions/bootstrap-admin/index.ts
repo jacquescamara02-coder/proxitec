@@ -38,16 +38,18 @@ Deno.serve(async (req) => {
     });
   }
   const uid = created.user.id;
+  const OLD_ID = "fba693de-925a-4749-999b-f7b4c6fa978d";
 
-  // Re-link existing profile (preserves historical data)
-  await admin.from("profiles").delete().eq("email", EMAIL);
+  // Re-point historical data to new auth uid
+  await admin.from("invoices").update({ vendeur_id: uid }).eq("vendeur_id", OLD_ID);
+  await admin.from("prints_log").update({ vendeur_id: uid }).eq("vendeur_id", OLD_ID);
+  await admin.from("user_roles").delete().eq("user_id", OLD_ID);
+  await admin.from("profiles").delete().eq("id", OLD_ID);
   await admin.from("profiles").upsert({ id: uid, email: EMAIL, full_name: FULL_NAME }, { onConflict: "id" });
-
-  // Move any historical invoices/prints tied to old profile to new uid? Already tied by vendeur_id (old uuid). Skip.
-
   await admin.from("user_roles").insert({ user_id: uid, role: "admin" });
 
   return new Response(JSON.stringify({ ok: true, user_id: uid, email: EMAIL }), {
     headers: { ...cors, "Content-Type": "application/json" },
   });
 });
+
