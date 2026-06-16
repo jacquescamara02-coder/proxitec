@@ -13,6 +13,9 @@ export default function AdminDashboard() {
     salesToday: 0, salesMonth: 0, invoicesToday: 0,
     lowStock: 0, openInterventions: 0, clientsCount: 0, printsToday: 0, productsCount: 0,
   });
+  const [recentInvoices, setRecentInvoices] = useState<any[]>([]);
+  const [recentPrints, setRecentPrints] = useState<any[]>([]);
+  const [vendorReport, setVendorReport] = useState<any[]>([]);
   const [query, setQuery] = useState("");
   const [hits, setHits] = useState<Hit[]>([]);
   const [searching, setSearching] = useState(false);
