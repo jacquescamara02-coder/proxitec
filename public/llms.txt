@@ -1,0 +1,7 @@
+# Proxitec
+
+> Proxitec est un fournisseur gabonais de solutions IT et électroniques : vidéosurveillance, alarmes anti-intrusion et incendie, contrôle d'accès FELIX, géolocalisation GPS, fibre optique, téléphonie, réseaux et formation.
+
+## Pages
+
+- [Accueil](/): Présentation de Proxitec, services, catalogue produits et coordonnées à Libreville (Gabon).
