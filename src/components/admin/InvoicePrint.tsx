@@ -98,7 +98,7 @@ export const InvoicePrint = ({ invoice, onClose }: { invoice: any; onClose: () =
           <table className="w-full border-collapse border border-black mt-6">
             <thead>
               <tr className="bg-white">
-                <th className="border border-black px-2 py-2 text-center w-20 text-[11px]">Code<br />Service</th>
+                <th className="border border-black px-2 py-2 text-center w-24 text-[11px]">Référence</th>
                 <th className="border border-black px-2 py-2 text-center text-[11px]">Désignation</th>
                 <th className="border border-black px-2 py-2 text-center w-16 text-[11px]">QTE</th>
                 <th className="border border-black px-2 py-2 text-center w-28 text-[11px]">P.U. XAF</th>
@@ -108,21 +108,23 @@ export const InvoicePrint = ({ invoice, onClose }: { invoice: any; onClose: () =
             <tbody>
               {items.map((it: any) => (
                 <tr key={it.id}>
-                  <td className="border border-black px-2 py-1.5 text-center font-bold">{it.code || ""}</td>
-                  <td className="border border-black px-2 py-1.5">{it.product_name}</td>
+                  <td className="border border-black px-2 py-1.5 text-center font-bold">{it.reference || it.code || ""}</td>
+                  <td className="border border-black px-2 py-1.5">
+                    <div className="flex items-center gap-2">
+                      <span className="flex-1">{it.product_name}</span>
+                      {it.product_image && (
+                        <img
+                          src={it.product_image}
+                          alt=""
+                          className="w-10 h-10 object-cover border border-black/30 rounded-sm shrink-0"
+                          crossOrigin="anonymous"
+                        />
+                      )}
+                    </div>
+                  </td>
                   <td className="border border-black px-2 py-1.5 text-center">{it.quantity}</td>
                   <td className="border border-black px-2 py-1.5 text-right">{formatXAF(Number(it.unit_price)).replace(" FCFA", "")}</td>
                   <td className="border border-black px-2 py-1.5 text-right">{formatXAF(Number(it.subtotal)).replace(" FCFA", "")}</td>
-                </tr>
-              ))}
-              {/* Empty filler rows for a clean look (up to 4) */}
-              {Array.from({ length: Math.max(0, 4 - items.length) }).map((_, i) => (
-                <tr key={`f-${i}`}>
-                  <td className="border border-black px-2 py-1.5">&nbsp;</td>
-                  <td className="border border-black px-2 py-1.5"></td>
-                  <td className="border border-black px-2 py-1.5"></td>
-                  <td className="border border-black px-2 py-1.5"></td>
-                  <td className="border border-black px-2 py-1.5"></td>
                 </tr>
               ))}
               <tr>
