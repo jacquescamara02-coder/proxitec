@@ -17,13 +17,14 @@ Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: cors });
   const admin = createClient(SUPABASE_URL, SERVICE_ROLE);
 
-  // Refuse if an admin already exists
-  const { data: existingAdmins } = await admin.from("user_roles").select("user_id").eq("role", "admin");
-  if (existingAdmins && existingAdmins.length > 0) {
-    return new Response(JSON.stringify({ error: "Un admin existe déjà", admins: existingAdmins }), {
+  // Refuse if an auth user already exists for this email
+  const { data: list } = await admin.auth.admin.listUsers();
+  if (list?.users?.some((u) => u.email === EMAIL)) {
+    return new Response(JSON.stringify({ error: "Auth user existe déjà" }), {
       status: 400, headers: { ...cors, "Content-Type": "application/json" },
     });
   }
+
 
   // Create auth user
   const { data: created, error: cErr } = await admin.auth.admin.createUser({
