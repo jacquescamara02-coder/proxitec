@@ -2,7 +2,6 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Printer } from "lucide-react";
 import { formatXAF, formatDate } from "@/lib/format";
-import logo from "@/assets/proxitec-logo.jpg";
 
 // ---------- Convert numbers to French words (XAF) ----------
 const UNITS = ["zéro","un","deux","trois","quatre","cinq","six","sept","huit","neuf","dix","onze","douze","treize","quatorze","quinze","seize","dix-sept","dix-huit","dix-neuf"];
@@ -60,7 +59,7 @@ export const InvoicePrint = ({ invoice, onClose }: { invoice: any; onClose: () =
           <div className="flex items-stretch gap-4 mb-2">
             {/* Left : logo + tags */}
             <div className="w-1/3 flex flex-col">
-              <img src={logo} alt="PROXITEC" className="w-44 mb-2" />
+              <img src="/proxitec-logo.jpg" alt="PROXITEC" className="w-44 mb-2" />
               <div className="text-[10px] leading-tight">
                 <div>| INFORMATIQUE | VIDEOSURVEILLANCE</div>
                 <div>| TELEMATIQUE&nbsp;&nbsp;&nbsp;| GESTION DES TEMPS</div>
