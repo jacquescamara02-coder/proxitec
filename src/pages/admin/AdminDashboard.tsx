@@ -45,6 +45,41 @@ export default function AdminDashboard() {
         printsToday: (printsRes.data || []).reduce((s, p) => s + Number(p.total), 0),
         productsCount: prodCount.count || 0,
       });
+
+      // Recent invoices
+      const { data: invs } = await supabase
+        .from("invoices")
+        .select("id,invoice_number,client_name,total,status,created_at,profiles:vendeur_id(full_name,email)")
+        .order("created_at", { ascending: false })
+        .limit(8);
+      setRecentInvoices(invs || []);
+
+      // Recent prints
+      const { data: prs } = await supabase
+        .from("prints_log")
+        .select("id,type,quantity,total,created_at,profiles:vendeur_id(full_name,email)")
+        .order("created_at", { ascending: false })
+        .limit(8);
+      setRecentPrints(prs || []);
+
+      // Vendor month report (sum invoices + prints by vendeur for current month)
+      const [{ data: monthInvs }, { data: monthPrints }, { data: profs }] = await Promise.all([
+        supabase.from("invoices").select("vendeur_id,total").gte("created_at", monthStart.toISOString()),
+        supabase.from("prints_log").select("vendeur_id,total").gte("log_date", monthStart.toISOString().split("T")[0]),
+        supabase.from("profiles").select("id,full_name,email"),
+      ]);
+      const agg = new Map<string, { name: string; invoices: number; prints: number }>();
+      (profs || []).forEach(p => agg.set(p.id, { name: p.full_name || p.email || "—", invoices: 0, prints: 0 }));
+      (monthInvs || []).forEach((r: any) => {
+        const e = agg.get(r.vendeur_id) || { name: "—", invoices: 0, prints: 0 };
+        e.invoices += Number(r.total); agg.set(r.vendeur_id, e);
+      });
+      (monthPrints || []).forEach((r: any) => {
+        const e = agg.get(r.vendeur_id) || { name: "—", invoices: 0, prints: 0 };
+        e.prints += Number(r.total); agg.set(r.vendeur_id, e);
+      });
+      setVendorReport(Array.from(agg.values()).filter(v => v.invoices + v.prints > 0)
+        .sort((a, b) => (b.invoices + b.prints) - (a.invoices + a.prints)));
     })();
   }, []);
 
