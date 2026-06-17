@@ -193,7 +193,7 @@ const services = [
     icon: Code2,
     title: "Développement Web",
     subtitle: "Sites & applications sur mesure",
-    image: imgInformatique,
+    image: imgDeveloppementWeb.url,
     description:
       "Conception et développement de sites vitrines, sites e-commerce et applications web sur mesure. Solutions modernes, responsive et optimisées SEO pour propulser votre activité au Gabon et à l'international.",
     features: [
