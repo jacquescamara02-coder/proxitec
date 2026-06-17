@@ -127,7 +127,7 @@ export default function VendeurDashboard() {
           </div>
           <div className="flex gap-1 bg-muted rounded-lg p-1">
             <button onClick={() => setTab("facture")} className={`px-3 py-1.5 rounded text-sm font-medium ${tab === "facture" ? "bg-card shadow" : ""}`}>Nouvelle facture</button>
-            <button onClick={() => setTab("impressions")} className={`px-3 py-1.5 rounded text-sm font-medium ${tab === "impressions" ? "bg-card shadow" : ""}`}>Impressions</button>
+            <button onClick={() => setTab("impressions")} className={`px-3 py-1.5 rounded text-sm font-medium ${tab === "impressions" ? "bg-card shadow" : ""}`}>Impression/Photocopie</button>
             <button onClick={() => setTab("historique")} className={`px-3 py-1.5 rounded text-sm font-medium ${tab === "historique" ? "bg-card shadow" : ""}`}>Historique</button>
           </div>
           <Button variant="ghost" size="sm" onClick={handleLogout}><LogOut className="w-4 h-4 mr-1" />Quitter</Button>
