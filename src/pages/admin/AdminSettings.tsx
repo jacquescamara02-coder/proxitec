@@ -114,6 +114,34 @@ export default function AdminSettings() {
       .then(({ data }) => setFullName(data?.full_name ?? ""));
   }, [user]);
 
+  useEffect(() => {
+    const loadVendeurs = async () => {
+      setLoadingVendeurs(true);
+      const { data, error } = await supabase.functions.invoke("admin-users", { body: { action: "list_users" } });
+      setLoadingVendeurs(false);
+      if (error) return;
+      const list = ((data?.users ?? []) as any[])
+        .filter((u) => u.role === "vendeur")
+        .map((u) => ({ user_id: u.user_id, email: u.profiles?.email ?? "—", full_name: u.profiles?.full_name ?? "—" }));
+      setVendeurs(list);
+    };
+    loadVendeurs();
+  }, []);
+
+  const resetVendeurPassword = async () => {
+    if (!selectedVendeur) { toast.error("Sélectionnez un vendeur"); return; }
+    if (vendeurNewPwd.length < 6) { toast.error("Min 6 caractères"); return; }
+    if (vendeurNewPwd !== vendeurConfirmPwd) { toast.error("Les mots de passe ne correspondent pas"); return; }
+    setSavingVendeurPwd(true);
+    const { data, error } = await supabase.functions.invoke("admin-users", {
+      body: { action: "update_password", payload: { user_id: selectedVendeur, password: vendeurNewPwd } },
+    });
+    setSavingVendeurPwd(false);
+    if (error || data?.error) { toast.error(data?.error ?? error?.message ?? "Erreur"); return; }
+    toast.success("Mot de passe du vendeur mis à jour");
+    setSelectedVendeur(""); setVendeurNewPwd(""); setVendeurConfirmPwd("");
+  };
+
   const saveProfile = async () => {
     if (!user) return;
     setSavingProfile(true);
