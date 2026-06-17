@@ -84,6 +84,13 @@ export default function VendeurDashboard() {
     loadMyInvoices();
   };
 
+  const resetInvoiceForm = () => {
+    setClientName("");
+    setClientPhone("");
+    setLines([{ product_id: null, product_name: "", reference: "", product_image: null, quantity: 1, unit_price: 0 }]);
+    toast.success("Formulaire réinitialisé");
+  };
+
   const submitPrint = async () => {
     const t = printForm.quantity * printForm.unit_price;
     const { error } = await supabase.from("prints_log").insert({
