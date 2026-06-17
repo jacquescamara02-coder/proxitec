@@ -68,7 +68,6 @@ export default function AdminInvoices() {
   const confirmDelete = async () => {
     if (!toDelete) return;
     setDeleting(true);
-    // Delete child items first (no ON DELETE CASCADE assumed)
     const { error: itErr } = await supabase.from("invoice_items").delete().eq("invoice_id", toDelete.id);
     if (itErr) { setDeleting(false); toast.error("Lignes : " + itErr.message); return; }
     const { error } = await supabase.from("invoices").delete().eq("id", toDelete.id);
@@ -76,6 +75,17 @@ export default function AdminInvoices() {
     if (error) { toast.error(error.message); return; }
     toast.success(`Facture ${toDelete.invoice_number} supprimée`);
     setToDelete(null);
+    load();
+  };
+
+  const confirmCancel = async () => {
+    if (!toCancel) return;
+    setCancelling(true);
+    const { error } = await supabase.from("invoices").update({ status: "Annulée" }).eq("id", toCancel.id);
+    setCancelling(false);
+    if (error) { toast.error(error.message); return; }
+    toast.success(`Facture ${toCancel.invoice_number} annulée`);
+    setToCancel(null);
     load();
   };
 
