@@ -12,6 +12,7 @@ import imgAlarme from "@/assets/service-alarme.jpg";
 import imgReseau from "@/assets/service-reseau.jpg";
 import imgTelephonie from "@/assets/service-telephonie.jpg";
 import imgInformatique from "@/assets/service-informatique.jpg";
+import imgDeveloppementWeb from "@/assets/service-developpement-web.jpg.asset.json";
 import { Cloud, MapPin, ShieldCheck, GraduationCap, Car, Flame, Network, PhoneCall, Monitor, Camera, Code2 } from "lucide-react";
 import DevisModal from "@/components/DevisModal";
 
