@@ -52,38 +52,47 @@ export type Database = {
       }
       interventions: {
         Row: {
+          amount: number | null
           client_id: string
           created_at: string
           description: string | null
           id: string
           intervention_date: string
+          invoice_number: string | null
           notes: string | null
           status: Database["public"]["Enums"]["intervention_status"]
           technicien: string | null
+          tps_amount: number | null
           type: string
           updated_at: string
         }
         Insert: {
+          amount?: number | null
           client_id: string
           created_at?: string
           description?: string | null
           id?: string
           intervention_date?: string
+          invoice_number?: string | null
           notes?: string | null
           status?: Database["public"]["Enums"]["intervention_status"]
           technicien?: string | null
+          tps_amount?: number | null
           type: string
           updated_at?: string
         }
         Update: {
+          amount?: number | null
           client_id?: string
           created_at?: string
           description?: string | null
           id?: string
           intervention_date?: string
+          invoice_number?: string | null
           notes?: string | null
           status?: Database["public"]["Enums"]["intervention_status"]
           technicien?: string | null
+          tps_amount?: number | null
           type?: string
           updated_at?: string
         }
