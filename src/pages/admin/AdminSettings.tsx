@@ -137,10 +137,24 @@ export default function AdminSettings() {
       body: { action: "update_password", payload: { user_id: selectedVendeur, password: vendeurNewPwd } },
     });
     setSavingVendeurPwd(false);
-    if (error || data?.error) { toast.error(data?.error ?? error?.message ?? "Erreur"); return; }
+    if (error || data?.error) {
+      let msg = data?.error ?? error?.message ?? "Erreur";
+      // Try to read the real error body from the function response
+      try {
+        const ctx: any = (error as any)?.context;
+        if (ctx && typeof ctx.json === "function") {
+          const body = await ctx.json();
+          if (body?.error) msg = body.error;
+        }
+      } catch { /* ignore */ }
+      console.error("update_password error:", error, data);
+      toast.error(msg);
+      return;
+    }
     toast.success("Mot de passe du vendeur mis à jour");
     setSelectedVendeur(""); setVendeurNewPwd(""); setVendeurConfirmPwd("");
   };
+
 
   const saveProfile = async () => {
     if (!user) return;
