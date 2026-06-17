@@ -210,12 +210,21 @@ export default function VendeurDashboard() {
               <h2 className="text-xl font-bold mb-4">Aujourd'hui</h2>
               <div className="text-3xl font-black text-primary mb-4">{formatXAF(totalPrintsToday)}</div>
               <Table>
-                <TableHeader><TableRow><TableHead>Type</TableHead><TableHead>Qté</TableHead><TableHead className="text-right">Total</TableHead></TableRow></TableHeader>
+                <TableHeader><TableRow><TableHead>Type</TableHead><TableHead className="text-right">Qté</TableHead><TableHead className="text-right">PU</TableHead><TableHead className="text-right">Total</TableHead></TableRow></TableHeader>
                 <TableBody>
-                  {todayPrints.length === 0 && <TableRow><TableCell colSpan={3} className="text-center text-muted-foreground py-4">Aucune entrée</TableCell></TableRow>}
-                  {todayPrints.map(p => (
-                    <TableRow key={p.id}><TableCell className="capitalize">{p.type}</TableCell><TableCell>{p.quantity}</TableCell><TableCell className="text-right font-bold">{formatXAF(Number(p.total))}</TableCell></TableRow>
-                  ))}
+                  {todayPrints.length === 0 && <TableRow><TableCell colSpan={4} className="text-center text-muted-foreground py-4">Aucune entrée</TableCell></TableRow>}
+                  {todayPrints.map(p => {
+                    const qty = Number(p.quantity);
+                    const pu = Number(p.unit_price);
+                    return (
+                      <TableRow key={p.id}>
+                        <TableCell className="capitalize">{p.type}</TableCell>
+                        <TableCell className="text-right">{qty}</TableCell>
+                        <TableCell className="text-right text-muted-foreground">{formatXAF(pu)}</TableCell>
+                        <TableCell className="text-right font-bold">{formatXAF(qty * pu)}</TableCell>
+                      </TableRow>
+                    );
+                  })}
                 </TableBody>
               </Table>
             </Card>
