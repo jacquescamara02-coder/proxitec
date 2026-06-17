@@ -164,6 +164,26 @@ export default function AdminInvoices() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      <AlertDialog open={!!toCancel} onOpenChange={(o) => !o && !cancelling && setToCancel(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Annuler la facture {toCancel?.invoice_number} ?</AlertDialogTitle>
+            <AlertDialogDescription>
+              La facture sera marquée comme <span className="font-semibold">Annulée</span> mais restera dans l'historique pour traçabilité.
+              Client : <span className="font-semibold">{toCancel?.client_name}</span> — Total :{" "}
+              <span className="font-semibold">{toCancel && formatXAF(Number(toCancel.total))}</span>.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={cancelling}>Retour</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmCancel} disabled={cancelling} className="bg-orange-500 text-white hover:bg-orange-600">
+              {cancelling ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Ban className="w-4 h-4 mr-2" />}
+              Confirmer l'annulation
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
