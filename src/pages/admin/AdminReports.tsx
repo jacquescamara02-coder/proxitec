@@ -38,7 +38,13 @@ export default function AdminReports() {
   }, [from, to]);
 
   const totalVentes = data.invoices.reduce((s, i) => s + Number(i.total), 0);
-  const totalPrints = data.prints.reduce((s, i) => s + Number(i.total), 0);
+  const impressions = data.prints.filter((p: any) => p.type === "impression");
+  const photocopies = data.prints.filter((p: any) => p.type === "photocopie");
+  const totalImpressions = impressions.reduce((s, i) => s + Number(i.total), 0);
+  const totalPhotocopies = photocopies.reduce((s, i) => s + Number(i.total), 0);
+  const qtyImpressions = impressions.reduce((s, i) => s + Number(i.quantity), 0);
+  const qtyPhotocopies = photocopies.reduce((s, i) => s + Number(i.quantity), 0);
+  const totalPrints = totalImpressions + totalPhotocopies;
 
   const byVendeur: Record<string, number> = {};
   data.invoices.forEach((i: any) => {
