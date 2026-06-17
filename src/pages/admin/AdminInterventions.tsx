@@ -11,9 +11,9 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge";
 import { Plus, Pencil, Trash2 } from "lucide-react";
 import { toast } from "sonner";
-import { formatDate } from "@/lib/format";
+import { formatDate, formatXAF } from "@/lib/format";
 
-const empty = { client_id: "", intervention_date: new Date().toISOString().split("T")[0], type: "", description: "", technicien: "", status: "planifiee", notes: "" };
+const empty = { client_id: "", intervention_date: new Date().toISOString().split("T")[0], type: "", description: "", technicien: "", status: "planifiee", notes: "", invoice_number: "", amount: "" };
 
 export default function AdminInterventions() {
   const [items, setItems] = useState<any[]>([]);
@@ -36,16 +36,21 @@ export default function AdminInterventions() {
     setForm({
       client_id: i.client_id, intervention_date: i.intervention_date,
       type: i.type, description: i.description || "", technicien: i.technicien || "",
-      status: i.status, notes: i.notes || "",
+      status: i.status, notes: i.notes || "", invoice_number: i.invoice_number || "",
+      amount: i.amount ? String(i.amount) : "",
     });
     setOpen(true);
   };
 
   const save = async () => {
     if (!form.client_id || !form.type) { toast.error("Client et type requis"); return; }
+    const payload = {
+      ...form,
+      amount: form.amount ? parseFloat(form.amount) : 0,
+    };
     const { error } = editing
-      ? await supabase.from("interventions").update(form as any).eq("id", editing.id)
-      : await supabase.from("interventions").insert(form as any);
+      ? await supabase.from("interventions").update(payload as any).eq("id", editing.id)
+      : await supabase.from("interventions").insert(payload as any);
     if (error) toast.error(error.message);
     else { toast.success("Enregistré"); setOpen(false); load(); }
   };
@@ -74,6 +79,8 @@ export default function AdminInterventions() {
               </div>
               <div><Label>Date</Label><Input type="date" value={form.intervention_date} onChange={e => setForm({ ...form, intervention_date: e.target.value })} /></div>
               <div><Label>Type *</Label><Input value={form.type} onChange={e => setForm({ ...form, type: e.target.value })} placeholder="Installation, maintenance..." /></div>
+              <div><Label>N° Facture</Label><Input value={form.invoice_number} onChange={e => setForm({ ...form, invoice_number: e.target.value })} placeholder="FA-2026-0001" /></div>
+              <div><Label>Montant (TTC)</Label><Input type="number" value={form.amount} onChange={e => setForm({ ...form, amount: e.target.value })} placeholder="0" /></div>
               <div><Label>Technicien</Label><Input value={form.technicien} onChange={e => setForm({ ...form, technicien: e.target.value })} /></div>
               <div>
                 <Label>Statut</Label>
@@ -97,14 +104,17 @@ export default function AdminInterventions() {
 
       <Card>
         <Table>
-          <TableHeader><TableRow><TableHead>Date</TableHead><TableHead>Client</TableHead><TableHead>Type</TableHead><TableHead>Technicien</TableHead><TableHead>Statut</TableHead><TableHead className="text-right">Actions</TableHead></TableRow></TableHeader>
+          <TableHeader><TableRow><TableHead>Date</TableHead><TableHead>Client</TableHead><TableHead>Type</TableHead><TableHead>N° Facture</TableHead><TableHead className="text-right">Montant</TableHead><TableHead className="text-right">TPS 9.5%</TableHead><TableHead>Technicien</TableHead><TableHead>Statut</TableHead><TableHead className="text-right">Actions</TableHead></TableRow></TableHeader>
           <TableBody>
-            {items.length === 0 && <TableRow><TableCell colSpan={6} className="text-center text-muted-foreground py-8">Aucune intervention</TableCell></TableRow>}
+            {items.length === 0 && <TableRow><TableCell colSpan={9} className="text-center text-muted-foreground py-8">Aucune intervention</TableCell></TableRow>}
             {items.map(i => (
               <TableRow key={i.id}>
                 <TableCell>{formatDate(i.intervention_date)}</TableCell>
                 <TableCell className="font-medium">{i.clients?.name || "—"}</TableCell>
                 <TableCell>{i.type}</TableCell>
+                <TableCell className="font-mono text-xs">{i.invoice_number || "—"}</TableCell>
+                <TableCell className="text-right font-bold">{formatXAF(Number(i.amount || 0))}</TableCell>
+                <TableCell className="text-right text-muted-foreground">{formatXAF(Number(i.tps_amount || 0))}</TableCell>
                 <TableCell>{i.technicien || "—"}</TableCell>
                 <TableCell><Badge variant="outline">{i.status}</Badge></TableCell>
                 <TableCell className="text-right">
