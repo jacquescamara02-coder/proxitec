@@ -115,7 +115,7 @@ export default function VendeurDashboard() {
 
   const handleLogout = async () => { await signOut(); navigate("/auth"); };
 
-  const totalPrintsToday = todayPrints.reduce((s, p) => s + Number(p.total), 0);
+  const totalPrintsToday = todayPrints.reduce((s, p) => s + Number(p.quantity) * Number(p.unit_price), 0);
 
   return (
     <div className="min-h-screen bg-muted/30">
