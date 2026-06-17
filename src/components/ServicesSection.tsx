@@ -12,7 +12,7 @@ import imgAlarme from "@/assets/service-alarme.jpg";
 import imgReseau from "@/assets/service-reseau.jpg";
 import imgTelephonie from "@/assets/service-telephonie.jpg";
 import imgInformatique from "@/assets/service-informatique.jpg";
-import { Cloud, MapPin, ShieldCheck, GraduationCap, Car, Flame, Network, PhoneCall, Monitor, Camera } from "lucide-react";
+import { Cloud, MapPin, ShieldCheck, GraduationCap, Car, Flame, Network, PhoneCall, Monitor, Camera, Code2 } from "lucide-react";
 import DevisModal from "@/components/DevisModal";
 
 const services = [
