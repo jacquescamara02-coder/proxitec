@@ -118,12 +118,21 @@ export default function AdminInvoices() {
                 <TableCell>{inv.client_name}</TableCell>
                 <TableCell>{inv.profiles?.full_name || inv.profiles?.email || "—"}</TableCell>
                 <TableCell className="font-bold">{formatXAF(Number(inv.total))}</TableCell>
-                <TableCell><Badge>{inv.status}</Badge></TableCell>
+                <TableCell>
+                  <Badge variant={inv.status === "annulee" ? "destructive" : "default"}>
+                    {inv.status === "annulee" ? "Annulée" : inv.status}
+                  </Badge>
+                </TableCell>
                 <TableCell className="text-right whitespace-nowrap">
                   <Button size="icon" variant="ghost" title="Aperçu" onClick={() => openInvoice(inv)}><Eye className="w-4 h-4" /></Button>
                   <Button size="icon" variant="ghost" title="Imprimer" onClick={() => printInvoice(inv)}><PrinterIcon className="w-4 h-4" /></Button>
                   <Button size="icon" variant="ghost" title="WhatsApp" onClick={() => sendWhatsApp(inv)}><MessageCircle className="w-4 h-4 text-[#25D366]" /></Button>
                   <Button size="icon" variant="ghost" title="Email" onClick={() => sendEmail(inv)}><Mail className="w-4 h-4" /></Button>
+                  {inv.status !== "annulee" && (
+                    <Button size="icon" variant="ghost" title="Annuler la facture" onClick={() => setToCancel(inv)}>
+                      <Ban className="w-4 h-4 text-orange-500" />
+                    </Button>
+                  )}
                   <Button size="icon" variant="ghost" title="Supprimer la facture" onClick={() => setToDelete(inv)}>
                     <Trash2 className="w-4 h-4 text-destructive" />
                   </Button>
