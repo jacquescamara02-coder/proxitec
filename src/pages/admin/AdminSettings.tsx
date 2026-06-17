@@ -133,22 +133,37 @@ export default function AdminSettings() {
     if (vendeurNewPwd.length < 6) { toast.error("Min 6 caractères"); return; }
     if (vendeurNewPwd !== vendeurConfirmPwd) { toast.error("Les mots de passe ne correspondent pas"); return; }
     setSavingVendeurPwd(true);
-    const { data, error } = await supabase.functions.invoke("admin-users", {
-      body: { action: "update_password", payload: { user_id: selectedVendeur, password: vendeurNewPwd } },
-    });
+    // Use direct fetch so we always get the response body (functions.invoke throws on non-2xx and hides it)
+    let msg: string | null = null;
+    let ok = false;
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/admin-users`;
+      const res = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${session?.access_token ?? ""}`,
+          "apikey": import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+        },
+        body: JSON.stringify({
+          action: "update_password",
+          payload: { user_id: selectedVendeur, password: vendeurNewPwd },
+        }),
+      });
+      const body = await res.json().catch(() => ({}));
+      if (!res.ok || body?.error) {
+        msg = body?.error || `Erreur ${res.status}`;
+      } else {
+        ok = true;
+      }
+    } catch (e: any) {
+      msg = e?.message ?? "Erreur réseau";
+    }
     setSavingVendeurPwd(false);
-    if (error || data?.error) {
-      let msg = data?.error ?? error?.message ?? "Erreur";
-      // Try to read the real error body from the function response
-      try {
-        const ctx: any = (error as any)?.context;
-        if (ctx && typeof ctx.json === "function") {
-          const body = await ctx.json();
-          if (body?.error) msg = body.error;
-        }
-      } catch { /* ignore */ }
-      console.error("update_password error:", error, data);
-      toast.error(msg);
+    if (!ok) {
+      console.error("update_password error:", msg);
+      toast.error(msg ?? "Erreur");
       return;
     }
     toast.success("Mot de passe du vendeur mis à jour");
