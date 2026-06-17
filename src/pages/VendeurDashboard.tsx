@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Plus, Trash2, Printer, LogOut, Receipt, Copy } from "lucide-react";
+import { Plus, Trash2, Printer, LogOut, Receipt, Copy, RotateCcw } from "lucide-react";
 import { toast } from "sonner";
 import { formatXAF, formatDateTime } from "@/lib/format";
 import { InvoicePrint } from "@/components/admin/InvoicePrint";
@@ -84,6 +84,13 @@ export default function VendeurDashboard() {
     loadMyInvoices();
   };
 
+  const resetInvoiceForm = () => {
+    setClientName("");
+    setClientPhone("");
+    setLines([{ product_id: null, product_name: "", reference: "", product_image: null, quantity: 1, unit_price: 0 }]);
+    toast.success("Formulaire réinitialisé");
+  };
+
   const submitPrint = async () => {
     const t = printForm.quantity * printForm.unit_price;
     const { error } = await supabase.from("prints_log").insert({
@@ -151,11 +158,16 @@ export default function VendeurDashboard() {
               <Button size="sm" variant="outline" onClick={addLine}><Plus className="w-4 h-4 mr-1" />Ajouter une ligne</Button>
             </div>
 
-            <div className="flex justify-between items-center pt-4 border-t">
+            <div className="flex justify-between items-center pt-4 border-t gap-3 flex-wrap">
               <div className="text-2xl font-black">Total : <span className="text-primary">{formatXAF(total)}</span></div>
-              <Button size="lg" onClick={submitInvoice} disabled={submitting}>
-                {submitting ? "Enregistrement..." : "Enregistrer & Imprimer"}
-              </Button>
+              <div className="flex gap-2">
+                <Button size="lg" variant="outline" onClick={resetInvoiceForm} disabled={submitting}>
+                  <RotateCcw className="w-4 h-4 mr-2" />Réinitialiser
+                </Button>
+                <Button size="lg" onClick={submitInvoice} disabled={submitting}>
+                  {submitting ? "Enregistrement..." : "Enregistrer & Imprimer"}
+                </Button>
+              </div>
             </div>
           </Card>
         )}
