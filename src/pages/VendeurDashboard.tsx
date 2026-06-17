@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Plus, Trash2, Printer, LogOut, Receipt, Copy } from "lucide-react";
+import { Plus, Trash2, Printer, LogOut, Receipt, Copy, RotateCcw } from "lucide-react";
 import { toast } from "sonner";
 import { formatXAF, formatDateTime } from "@/lib/format";
 import { InvoicePrint } from "@/components/admin/InvoicePrint";
