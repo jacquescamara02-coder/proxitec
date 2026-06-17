@@ -96,11 +96,16 @@ export default function VendeurDashboard() {
   const submitPrint = async () => {
     const t = printForm.quantity * printForm.unit_price;
     const { error } = await supabase.from("prints_log").insert({
-      vendeur_id: user!.id, type: printForm.type as any, quantity: printForm.quantity,
+      vendeur_id: user!.id, type: printTab as any, quantity: printForm.quantity,
       unit_price: printForm.unit_price, total: t, notes: printForm.notes || null,
     });
     if (error) toast.error(error.message);
-    else { toast.success("Enregistré"); setPrintForm({ type: "impression", quantity: 1, unit_price: 100, notes: "" }); loadToday(); }
+    else { toast.success("Enregistré"); setPrintForm({ quantity: 1, unit_price: DEFAULT_PRICES[printTab], notes: "" }); loadToday(); }
+  };
+
+  const switchPrintTab = (t: "impression" | "photocopie") => {
+    setPrintTab(t);
+    setPrintForm({ quantity: 1, unit_price: DEFAULT_PRICES[t], notes: "" });
   };
 
   const viewInvoice = async (inv: any) => {
