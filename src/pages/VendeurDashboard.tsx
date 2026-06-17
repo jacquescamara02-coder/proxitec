@@ -158,11 +158,16 @@ export default function VendeurDashboard() {
               <Button size="sm" variant="outline" onClick={addLine}><Plus className="w-4 h-4 mr-1" />Ajouter une ligne</Button>
             </div>
 
-            <div className="flex justify-between items-center pt-4 border-t">
+            <div className="flex justify-between items-center pt-4 border-t gap-3 flex-wrap">
               <div className="text-2xl font-black">Total : <span className="text-primary">{formatXAF(total)}</span></div>
-              <Button size="lg" onClick={submitInvoice} disabled={submitting}>
-                {submitting ? "Enregistrement..." : "Enregistrer & Imprimer"}
-              </Button>
+              <div className="flex gap-2">
+                <Button size="lg" variant="outline" onClick={resetInvoiceForm} disabled={submitting}>
+                  <RotateCcw className="w-4 h-4 mr-2" />Réinitialiser
+                </Button>
+                <Button size="lg" onClick={submitInvoice} disabled={submitting}>
+                  {submitting ? "Enregistrement..." : "Enregistrer & Imprimer"}
+                </Button>
+              </div>
             </div>
           </Card>
         )}
