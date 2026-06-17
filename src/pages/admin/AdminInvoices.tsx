@@ -81,7 +81,7 @@ export default function AdminInvoices() {
   const confirmCancel = async () => {
     if (!toCancel) return;
     setCancelling(true);
-    const { error } = await supabase.from("invoices").update({ status: "Annulée" }).eq("id", toCancel.id);
+    const { error } = await supabase.from("invoices").update({ status: "annulee" }).eq("id", toCancel.id);
     setCancelling(false);
     if (error) { toast.error(error.message); return; }
     toast.success(`Facture ${toCancel.invoice_number} annulée`);
