@@ -27,7 +27,9 @@ export default function VendeurDashboard() {
   const [savedInvoice, setSavedInvoice] = useState<any>(null);
   const [submitting, setSubmitting] = useState(false);
 
-  const [printForm, setPrintForm] = useState({ type: "impression", quantity: 1, unit_price: 100, notes: "" });
+  const DEFAULT_PRICES = { impression: 200, photocopie: 50 } as const;
+  const [printTab, setPrintTab] = useState<"impression" | "photocopie">("impression");
+  const [printForm, setPrintForm] = useState({ quantity: 1, unit_price: 200, notes: "" });
   const [todayPrints, setTodayPrints] = useState<any[]>([]);
   const [myInvoices, setMyInvoices] = useState<any[]>([]);
   const [viewInv, setViewInv] = useState<any>(null);
@@ -94,11 +96,16 @@ export default function VendeurDashboard() {
   const submitPrint = async () => {
     const t = printForm.quantity * printForm.unit_price;
     const { error } = await supabase.from("prints_log").insert({
-      vendeur_id: user!.id, type: printForm.type as any, quantity: printForm.quantity,
+      vendeur_id: user!.id, type: printTab as any, quantity: printForm.quantity,
       unit_price: printForm.unit_price, total: t, notes: printForm.notes || null,
     });
     if (error) toast.error(error.message);
-    else { toast.success("Enregistré"); setPrintForm({ type: "impression", quantity: 1, unit_price: 100, notes: "" }); loadToday(); }
+    else { toast.success("Enregistré"); setPrintForm({ quantity: 1, unit_price: DEFAULT_PRICES[printTab], notes: "" }); loadToday(); }
+  };
+
+  const switchPrintTab = (t: "impression" | "photocopie") => {
+    setPrintTab(t);
+    setPrintForm({ quantity: 1, unit_price: DEFAULT_PRICES[t], notes: "" });
   };
 
   const viewInvoice = async (inv: any) => {
@@ -176,22 +183,26 @@ export default function VendeurDashboard() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Card className="p-6">
               <h2 className="text-xl font-bold mb-4 flex items-center gap-2"><Copy className="w-5 h-5" />Nouvelle prestation</h2>
+              <div className="grid grid-cols-2 gap-2 p-1 bg-muted rounded-lg mb-4">
+                <button
+                  onClick={() => switchPrintTab("impression")}
+                  className={`py-2 rounded font-semibold text-sm transition ${printTab === "impression" ? "bg-card shadow text-primary" : "text-muted-foreground"}`}
+                >
+                  Impression <span className="text-xs font-normal">(200 FCFA)</span>
+                </button>
+                <button
+                  onClick={() => switchPrintTab("photocopie")}
+                  className={`py-2 rounded font-semibold text-sm transition ${printTab === "photocopie" ? "bg-card shadow text-primary" : "text-muted-foreground"}`}
+                >
+                  Photocopie <span className="text-xs font-normal">(50 FCFA)</span>
+                </button>
+              </div>
               <div className="space-y-4">
-                <div>
-                  <Label>Type</Label>
-                  <Select value={printForm.type} onValueChange={v => setPrintForm({ ...printForm, type: v })}>
-                    <SelectTrigger><SelectValue /></SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="impression">Impression</SelectItem>
-                      <SelectItem value="photocopie">Photocopie</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
                 <div><Label>Quantité</Label><Input type="number" min={1} value={printForm.quantity} onChange={e => setPrintForm({ ...printForm, quantity: Number(e.target.value) })} /></div>
                 <div><Label>Prix unitaire (FCFA)</Label><Input type="number" value={printForm.unit_price} onChange={e => setPrintForm({ ...printForm, unit_price: Number(e.target.value) })} /></div>
                 <div><Label>Notes</Label><Input value={printForm.notes} onChange={e => setPrintForm({ ...printForm, notes: e.target.value })} placeholder="(facultatif)" /></div>
                 <div className="text-xl font-bold">Total : {formatXAF(printForm.quantity * printForm.unit_price)}</div>
-                <Button onClick={submitPrint} className="w-full">Enregistrer</Button>
+                <Button onClick={submitPrint} className="w-full">Enregistrer {printTab === "impression" ? "l'impression" : "la photocopie"}</Button>
               </div>
             </Card>
 
