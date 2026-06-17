@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Eye, Printer as PrinterIcon, MessageCircle, Mail, Trash2, Loader2 } from "lucide-react";
+import { Eye, Printer as PrinterIcon, MessageCircle, Mail, Trash2, Loader2, Ban } from "lucide-react";
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
@@ -29,7 +29,9 @@ export default function AdminInvoices() {
   const [to, setTo] = useState("");
   const [view, setView] = useState<any>(null);
   const [toDelete, setToDelete] = useState<any>(null);
+  const [toCancel, setToCancel] = useState<any>(null);
   const [deleting, setDeleting] = useState(false);
+  const [cancelling, setCancelling] = useState(false);
 
   const load = async () => {
     let q = supabase.from("invoices").select("*, profiles:vendeur_id(full_name,email)").order("created_at", { ascending: false });
@@ -66,7 +68,6 @@ export default function AdminInvoices() {
   const confirmDelete = async () => {
     if (!toDelete) return;
     setDeleting(true);
-    // Delete child items first (no ON DELETE CASCADE assumed)
     const { error: itErr } = await supabase.from("invoice_items").delete().eq("invoice_id", toDelete.id);
     if (itErr) { setDeleting(false); toast.error("Lignes : " + itErr.message); return; }
     const { error } = await supabase.from("invoices").delete().eq("id", toDelete.id);
@@ -74,6 +75,17 @@ export default function AdminInvoices() {
     if (error) { toast.error(error.message); return; }
     toast.success(`Facture ${toDelete.invoice_number} supprimée`);
     setToDelete(null);
+    load();
+  };
+
+  const confirmCancel = async () => {
+    if (!toCancel) return;
+    setCancelling(true);
+    const { error } = await supabase.from("invoices").update({ status: "annulee" }).eq("id", toCancel.id);
+    setCancelling(false);
+    if (error) { toast.error(error.message); return; }
+    toast.success(`Facture ${toCancel.invoice_number} annulée`);
+    setToCancel(null);
     load();
   };
 
@@ -106,12 +118,21 @@ export default function AdminInvoices() {
                 <TableCell>{inv.client_name}</TableCell>
                 <TableCell>{inv.profiles?.full_name || inv.profiles?.email || "—"}</TableCell>
                 <TableCell className="font-bold">{formatXAF(Number(inv.total))}</TableCell>
-                <TableCell><Badge>{inv.status}</Badge></TableCell>
+                <TableCell>
+                  <Badge variant={inv.status === "annulee" ? "destructive" : "default"}>
+                    {inv.status === "annulee" ? "Annulée" : inv.status}
+                  </Badge>
+                </TableCell>
                 <TableCell className="text-right whitespace-nowrap">
                   <Button size="icon" variant="ghost" title="Aperçu" onClick={() => openInvoice(inv)}><Eye className="w-4 h-4" /></Button>
                   <Button size="icon" variant="ghost" title="Imprimer" onClick={() => printInvoice(inv)}><PrinterIcon className="w-4 h-4" /></Button>
                   <Button size="icon" variant="ghost" title="WhatsApp" onClick={() => sendWhatsApp(inv)}><MessageCircle className="w-4 h-4 text-[#25D366]" /></Button>
                   <Button size="icon" variant="ghost" title="Email" onClick={() => sendEmail(inv)}><Mail className="w-4 h-4" /></Button>
+                  {inv.status !== "annulee" && (
+                    <Button size="icon" variant="ghost" title="Annuler la facture" onClick={() => setToCancel(inv)}>
+                      <Ban className="w-4 h-4 text-orange-500" />
+                    </Button>
+                  )}
                   <Button size="icon" variant="ghost" title="Supprimer la facture" onClick={() => setToDelete(inv)}>
                     <Trash2 className="w-4 h-4 text-destructive" />
                   </Button>
@@ -139,6 +160,26 @@ export default function AdminInvoices() {
             <AlertDialogAction onClick={confirmDelete} disabled={deleting} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
               {deleting ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Trash2 className="w-4 h-4 mr-2" />}
               Supprimer définitivement
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <AlertDialog open={!!toCancel} onOpenChange={(o) => !o && !cancelling && setToCancel(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Annuler la facture {toCancel?.invoice_number} ?</AlertDialogTitle>
+            <AlertDialogDescription>
+              La facture sera marquée comme <span className="font-semibold">Annulée</span> mais restera dans l'historique pour traçabilité.
+              Client : <span className="font-semibold">{toCancel?.client_name}</span> — Total :{" "}
+              <span className="font-semibold">{toCancel && formatXAF(Number(toCancel.total))}</span>.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={cancelling}>Retour</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmCancel} disabled={cancelling} className="bg-orange-500 text-white hover:bg-orange-600">
+              {cancelling ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Ban className="w-4 h-4 mr-2" />}
+              Confirmer l'annulation
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
