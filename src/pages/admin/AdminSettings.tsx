@@ -210,6 +210,33 @@ export default function AdminSettings() {
         </div>
       </Card>
 
+      <Card className="p-6 mb-6 hover:shadow-md transition-shadow border-primary/20">
+        <h2 className="font-bold text-lg mb-1 flex items-center gap-2"><Users className="w-5 h-5 text-primary" /> Mot de passe d'un vendeur</h2>
+        <p className="text-sm text-muted-foreground mb-4">Réinitialisez le mot de passe d'un vendeur sans connaître l'ancien.</p>
+        <div className="space-y-4">
+          <div>
+            <Label>Vendeur</Label>
+            <Select value={selectedVendeur} onValueChange={setSelectedVendeur} disabled={loadingVendeurs}>
+              <SelectTrigger><SelectValue placeholder={loadingVendeurs ? "Chargement..." : "Sélectionnez un vendeur"} /></SelectTrigger>
+              <SelectContent>
+                {vendeurs.length === 0 && <div className="px-2 py-3 text-sm text-muted-foreground">Aucun vendeur</div>}
+                {vendeurs.map((v) => (
+                  <SelectItem key={v.user_id} value={v.user_id}>
+                    {v.full_name} — {v.email}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <div><Label>Nouveau mot de passe</Label><Input type="password" value={vendeurNewPwd} onChange={e => setVendeurNewPwd(e.target.value)} placeholder="Min 6 caractères" /></div>
+          <div><Label>Confirmer</Label><Input type="password" value={vendeurConfirmPwd} onChange={e => setVendeurConfirmPwd(e.target.value)} /></div>
+          <Button onClick={resetVendeurPassword} disabled={savingVendeurPwd} className="hover-scale">
+            {savingVendeurPwd ? <Loader2 className="w-4 h-4 animate-spin" /> : "Réinitialiser le mot de passe"}
+          </Button>
+        </div>
+      </Card>
+
+
       <Card className="p-6 hover:shadow-md transition-shadow">
         <div className="flex items-center justify-between mb-4">
           <h2 className="font-bold text-lg flex items-center gap-2"><Palette className="w-5 h-5" /> Apparence & couleurs</h2>
