@@ -38,7 +38,13 @@ export default function AdminReports() {
   }, [from, to]);
 
   const totalVentes = data.invoices.reduce((s, i) => s + Number(i.total), 0);
-  const totalPrints = data.prints.reduce((s, i) => s + Number(i.total), 0);
+  const impressions = data.prints.filter((p: any) => p.type === "impression");
+  const photocopies = data.prints.filter((p: any) => p.type === "photocopie");
+  const totalImpressions = impressions.reduce((s, i) => s + Number(i.total), 0);
+  const totalPhotocopies = photocopies.reduce((s, i) => s + Number(i.total), 0);
+  const qtyImpressions = impressions.reduce((s, i) => s + Number(i.quantity), 0);
+  const qtyPhotocopies = photocopies.reduce((s, i) => s + Number(i.quantity), 0);
+  const totalPrints = totalImpressions + totalPhotocopies;
 
   const byVendeur: Record<string, number> = {};
   data.invoices.forEach((i: any) => {
@@ -68,9 +74,10 @@ export default function AdminReports() {
         <Button variant="outline" onClick={exportCSV}>Export CSV</Button>
       </Card>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
         <Card className="p-5"><div className="text-xs text-muted-foreground uppercase">Total ventes</div><div className="text-2xl font-bold">{formatXAF(totalVentes)}</div><div className="text-xs text-muted-foreground mt-1">{data.invoices.length} factures</div></Card>
-        <Card className="p-5"><div className="text-xs text-muted-foreground uppercase">Impressions/photocopies</div><div className="text-2xl font-bold">{formatXAF(totalPrints)}</div></Card>
+        <Card className="p-5"><div className="text-xs text-muted-foreground uppercase">Impressions</div><div className="text-2xl font-bold">{formatXAF(totalImpressions)}</div><div className="text-xs text-muted-foreground mt-1">{qtyImpressions} pages</div></Card>
+        <Card className="p-5"><div className="text-xs text-muted-foreground uppercase">Photocopies</div><div className="text-2xl font-bold">{formatXAF(totalPhotocopies)}</div><div className="text-xs text-muted-foreground mt-1">{qtyPhotocopies} pages</div></Card>
         <Card className="p-5"><div className="text-xs text-muted-foreground uppercase">Total général</div><div className="text-2xl font-bold text-primary">{formatXAF(totalVentes + totalPrints)}</div></Card>
       </div>
 
