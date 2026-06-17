@@ -28,6 +28,8 @@ export default function AdminInvoices() {
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
   const [view, setView] = useState<any>(null);
+  const [toDelete, setToDelete] = useState<any>(null);
+  const [deleting, setDeleting] = useState(false);
 
   const load = async () => {
     let q = supabase.from("invoices").select("*, profiles:vendeur_id(full_name,email)").order("created_at", { ascending: false });
