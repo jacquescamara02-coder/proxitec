@@ -27,7 +27,9 @@ export default function VendeurDashboard() {
   const [savedInvoice, setSavedInvoice] = useState<any>(null);
   const [submitting, setSubmitting] = useState(false);
 
-  const [printForm, setPrintForm] = useState({ type: "impression", quantity: 1, unit_price: 100, notes: "" });
+  const DEFAULT_PRICES = { impression: 200, photocopie: 50 } as const;
+  const [printTab, setPrintTab] = useState<"impression" | "photocopie">("impression");
+  const [printForm, setPrintForm] = useState({ quantity: 1, unit_price: 200, notes: "" });
   const [todayPrints, setTodayPrints] = useState<any[]>([]);
   const [myInvoices, setMyInvoices] = useState<any[]>([]);
   const [viewInv, setViewInv] = useState<any>(null);
