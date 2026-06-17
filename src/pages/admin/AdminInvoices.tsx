@@ -123,6 +123,26 @@ export default function AdminInvoices() {
       </Card>
 
       {view && <InvoicePrint invoice={view} onClose={() => setView(null)} />}
+
+      <AlertDialog open={!!toDelete} onOpenChange={(o) => !o && !deleting && setToDelete(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Supprimer la facture {toDelete?.invoice_number} ?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Cette action est irréversible. La facture et toutes ses lignes seront définitivement supprimées.
+              Client : <span className="font-semibold">{toDelete?.client_name}</span> — Total :{" "}
+              <span className="font-semibold">{toDelete && formatXAF(Number(toDelete.total))}</span>.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={deleting}>Annuler</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmDelete} disabled={deleting} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+              {deleting ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Trash2 className="w-4 h-4 mr-2" />}
+              Supprimer définitivement
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
