@@ -12,7 +12,7 @@ import imgAlarme from "@/assets/service-alarme.jpg";
 import imgReseau from "@/assets/service-reseau.jpg";
 import imgTelephonie from "@/assets/service-telephonie.jpg";
 import imgInformatique from "@/assets/service-informatique.jpg";
-import { Cloud, MapPin, ShieldCheck, GraduationCap, Car, Flame, Network, PhoneCall, Monitor, Camera } from "lucide-react";
+import { Cloud, MapPin, ShieldCheck, GraduationCap, Car, Flame, Network, PhoneCall, Monitor, Camera, Code2 } from "lucide-react";
 import DevisModal from "@/components/DevisModal";
 
 const services = [
@@ -186,6 +186,23 @@ const services = [
     ],
     badge: null,
     color: "from-slate-700 to-gray-800",
+  },
+  {
+    id: 11,
+    icon: Code2,
+    title: "Développement Web",
+    subtitle: "Sites & applications sur mesure",
+    image: imgInformatique,
+    description:
+      "Conception et développement de sites vitrines, sites e-commerce et applications web sur mesure. Solutions modernes, responsive et optimisées SEO pour propulser votre activité au Gabon et à l'international.",
+    features: [
+      "Sites vitrines & e-commerce",
+      "Applications web sur mesure",
+      "Design responsive & SEO",
+      "Hébergement & maintenance",
+    ],
+    badge: "Nouveau",
+    color: "from-fuchsia-700 to-purple-900",
   },
 ];
 
