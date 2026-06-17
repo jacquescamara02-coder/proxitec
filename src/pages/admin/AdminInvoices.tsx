@@ -112,6 +112,9 @@ export default function AdminInvoices() {
                   <Button size="icon" variant="ghost" title="Imprimer" onClick={() => printInvoice(inv)}><PrinterIcon className="w-4 h-4" /></Button>
                   <Button size="icon" variant="ghost" title="WhatsApp" onClick={() => sendWhatsApp(inv)}><MessageCircle className="w-4 h-4 text-[#25D366]" /></Button>
                   <Button size="icon" variant="ghost" title="Email" onClick={() => sendEmail(inv)}><Mail className="w-4 h-4" /></Button>
+                  <Button size="icon" variant="ghost" title="Supprimer la facture" onClick={() => setToDelete(inv)}>
+                    <Trash2 className="w-4 h-4 text-destructive" />
+                  </Button>
                 </TableCell>
               </TableRow>
             ))}
