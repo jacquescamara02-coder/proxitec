@@ -63,6 +63,20 @@ export default function AdminInvoices() {
     window.location.href = `mailto:${to}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
   };
 
+  const confirmDelete = async () => {
+    if (!toDelete) return;
+    setDeleting(true);
+    // Delete child items first (no ON DELETE CASCADE assumed)
+    const { error: itErr } = await supabase.from("invoice_items").delete().eq("invoice_id", toDelete.id);
+    if (itErr) { setDeleting(false); toast.error("Lignes : " + itErr.message); return; }
+    const { error } = await supabase.from("invoices").delete().eq("id", toDelete.id);
+    setDeleting(false);
+    if (error) { toast.error(error.message); return; }
+    toast.success(`Facture ${toDelete.invoice_number} supprimée`);
+    setToDelete(null);
+    load();
+  };
+
   const printInvoice = async (inv: any) => {
     setView(await fetchFull(inv));
     setTimeout(() => window.print(), 350);
