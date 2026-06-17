@@ -93,6 +93,15 @@ export default function AdminSettings() {
   const [confirmPwd, setConfirmPwd] = useState("");
   const [savingPwd, setSavingPwd] = useState(false);
 
+  // Vendor password reset
+  type Vendeur = { user_id: string; email: string; full_name: string };
+  const [vendeurs, setVendeurs] = useState<Vendeur[]>([]);
+  const [selectedVendeur, setSelectedVendeur] = useState<string>("");
+  const [vendeurNewPwd, setVendeurNewPwd] = useState("");
+  const [vendeurConfirmPwd, setVendeurConfirmPwd] = useState("");
+  const [savingVendeurPwd, setSavingVendeurPwd] = useState(false);
+  const [loadingVendeurs, setLoadingVendeurs] = useState(false);
+
   const [theme, setTheme] = useState(() => {
     try { return JSON.parse(localStorage.getItem("proxitec-theme") || "null") || DEFAULT_THEME; }
     catch { return DEFAULT_THEME; }
