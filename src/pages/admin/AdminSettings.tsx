@@ -6,7 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import { Loader2, ShieldCheck, User, KeyRound, Palette, RotateCcw, Check } from "lucide-react";
+import { Loader2, ShieldCheck, User, KeyRound, Palette, RotateCcw, Check, Users } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 // HSL strings stored in CSS variables (no "hsl()" wrapper)
 const DEFAULT_THEME = {
